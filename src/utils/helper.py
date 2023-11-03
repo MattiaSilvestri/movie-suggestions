@@ -24,7 +24,7 @@ def format_data(data_path: str) -> dict:
     all_titles = list(df["title"].values)
 
     # Initialize empty dictionary to hold the title-vector pairs
-    formatted_data = dict.fromkeys(all_titles, None)
+    formatted_dict = dict.fromkeys(all_titles, None)
 
     # Remove to the "title" column so it doesn't get into the vectorizer
     # algorithm
@@ -42,6 +42,12 @@ def format_data(data_path: str) -> dict:
             for j in n:
                 str_value = str_value + " " + j
 
-        formatted_data[all_titles[i]] = str_value
+        formatted_dict[all_titles[i]] = str_value
+
+    # Convert dictionary to dataframe
+    formatted_data = pd.DataFrame.from_dict(
+        formatted_dict, orient="index", columns=["info"]
+    )
+    formatted_data.reset_index(inplace=True)
 
     return formatted_data
