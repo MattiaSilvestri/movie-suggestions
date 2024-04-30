@@ -26,7 +26,7 @@ def format_data(data_path: str) -> dict:
     # Initialize empty dictionary to hold the title-vector pairs
     formatted_dict = dict.fromkeys(all_titles, None)
 
-    # Remove to the "title" column so it doesn't get into the vectorizer
+    # Remove the "title" column so it doesn't get into the vectorizer
     # algorithm
     df.drop("title", axis=1, inplace=True)
 

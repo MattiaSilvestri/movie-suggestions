@@ -1,0 +1,15 @@
+target-version = ["py38", "py39", "py310", "py311"]
+
+[tool.black]
+line-length = 88
+
+[tool.pylint.format]
+max-line-length = 88
+
+[tool.pylint.messages_control]
+disable = ["C", "R", "missing-module-docstring", "missing-function-docstring",
+"import-error"]
+
+[tool.pylint.miscellaneous]
+# List of note tags to take in consideration, separated by a comma.
+notes = ["FIXME", "TODO"]
