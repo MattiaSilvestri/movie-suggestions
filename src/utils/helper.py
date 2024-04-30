@@ -51,3 +51,28 @@ def format_data(data_path: str) -> dict:
     formatted_data.reset_index(inplace=True)
 
     return formatted_data
+
+
+def lookup_title(data_path: str, title: str, verbose: int) -> pd.DataFrame:
+    """Lookup title in data.
+
+    Parameters
+    ----------
+    data_path : str
+        Path to csv file.
+    title : str
+        Title to lookup.
+
+    Returns
+    -------
+    info : str
+        Info about the movie.
+    """
+
+    # Get suggestions
+    movies = pd.read_csv(data_path)
+    suggestions = movies[["index", title]].sort_values(by=title, ascending=False)[
+        1:verbose
+    ]
+
+    return suggestions
