@@ -31,9 +31,6 @@ class MvSuggest(App):
             "../data/movie_similarity.csv", movie_query, 10
         )
 
-        for i in suggestions_df["index"].values:
-            print(i)
-
         suggestions = [ListItem(Label(i))
                        for i in suggestions_df["index"].values]
         new_list = ListView(*suggestions)
