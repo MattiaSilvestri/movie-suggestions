@@ -1,13 +1,23 @@
 Screen {
     align: center middle;
+    background: #1e1e2e;
 }
 
 ListView {
-    width: 30;
+    width: 100%;
     height: auto;
     margin: 2 2;
+    background: #181825;
+}
+
+ListItem {
+    background: #181825;
 }
 
 Label {
     padding: 1 2;
+}
+
+Input {
+    background: #181825;
 }
