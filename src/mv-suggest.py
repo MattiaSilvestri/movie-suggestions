@@ -15,7 +15,10 @@ class MvSuggest(App):
     """
 
     CSS_PATH = "./tcss/styles.tcss"
-    BINDINGS = []
+    BINDINGS = [
+        ("r", "remove_list", "Remove list"),
+        ("ctrl+g", "focus_list", "Focus list"),
+    ]
 
     def compose(self) -> ComposeResult:
         """Create child widgets of the app."""
@@ -35,6 +38,18 @@ class MvSuggest(App):
                        for i in suggestions_df["index"].values]
         new_list = ListView(*suggestions)
         self.query_one("#list").mount(new_list)
+
+    def action_remove_list(self) -> None:
+        """Action to remove list."""
+        list_item = self.query("ListView")
+        if list_item:
+            list_item.last().remove()
+
+    def action_focus_list(self) -> None:
+        """Action to focus list."""
+        list_item = self.query("ListView")
+        if list_item:
+            list_item.first().focus()
 
 
 if __name__ == "__main__":
