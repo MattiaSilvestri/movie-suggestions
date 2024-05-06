@@ -1,4 +1,4 @@
-import utils.widgets as widgets
+from utils.widgets import MovieList
 
 # import utils.helper as helper
 from textual.app import App, ComposeResult
@@ -14,10 +14,11 @@ class MvSuggest(App):
     Textual app to suggest movies based on user input
     """
 
-    CSS_PATH = "./tcss/styles.tcss"
+    CSS_PATH = "./styles/styles.tcss"
     BINDINGS = [
         ("r", "remove_list", "Remove list"),
-        ("ctrl+g", "focus_list", "Focus list"),
+        ("ctrl+j", "cursor_down", "Moves cursor down"),
+        ("ctrl+k", "cursor_up", "Moves cursor up"),
     ]
 
     def compose(self) -> ComposeResult:
@@ -26,7 +27,7 @@ class MvSuggest(App):
         yield Footer()
         yield ScrollableContainer(Input("text"), id="list")
 
-    def on_input_submitted(self, event: Input.Submitted) -> None:
+    async def on_input_submitted(self, event: Input.Submitted) -> None:
         """Handle submit action."""
 
         movie_query = event.input.value
@@ -36,20 +37,27 @@ class MvSuggest(App):
 
         suggestions = [ListItem(Label(i))
                        for i in suggestions_df["index"].values]
-        new_list = ListView(*suggestions)
-        self.query_one("#list").mount(new_list)
+        new_list = MovieList(*suggestions)
+        # Mount the list view widget
+        await self.query_one("#list").mount(new_list)
+        # Focus the first item
+        mounted_list = self.query_one("MovieList")
+        mounted_list.focus()
+        mounted_list.highlighted_child.add_class("highlighted")
 
     def action_remove_list(self) -> None:
         """Action to remove list."""
-        list_item = self.query("ListView")
+        list_item = self.query("MovieList")
         if list_item:
             list_item.last().remove()
 
-    def action_focus_list(self) -> None:
-        """Action to focus list."""
-        list_item = self.query("ListView")
-        if list_item:
-            list_item.first().focus()
+    def action_cursor_down(self) -> None:
+        """Action to move cursor down."""
+        self.query_one("MovieList").action_cursor_down()
+
+    def action_cursor_up(self) -> None:
+        """Action to move cursor up."""
+        self.query_one("MovieList").action_cursor_up()
 
 
 if __name__ == "__main__":

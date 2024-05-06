@@ -14,6 +14,10 @@ ListItem {
     background: #181825;
 }
 
+.highlighted {
+    background: #f9f9f9;
+}
+
 Label {
     padding: 1 2;
 }
