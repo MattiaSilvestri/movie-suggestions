@@ -76,3 +76,23 @@ def lookup_title(data_path: str, title: str, verbose: int) -> pd.DataFrame:
     ]
 
     return suggestions
+
+
+def get_input_suggestions(data_path: str) -> list:
+    """Generate list to use for the input suggester.
+
+    Parameters
+    ----------
+    data_path : str
+        Path to csv file.
+
+    Returns
+    -------
+    list
+        List of titles to use for the input suggester.
+    """
+
+    movies = pd.read_csv(data_path)
+    titles = list(movies["index"].values)
+
+    return titles

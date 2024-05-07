@@ -1,10 +1,12 @@
 from utils.widgets import MovieList
+import utils.helper as helper
 
-# import utils.helper as helper
+import pandas as pd
+
 from textual.app import App, ComposeResult
-from textual.widgets import Footer, Header, ListItem, ListView, Label, Input
+from textual.widgets import Footer, Header, ListItem, Label, Input
 from textual.containers import ScrollableContainer
-from utils import helper
+from textual.suggester import SuggestFromList
 
 # from textual.reactive import reactive
 
@@ -21,11 +23,18 @@ class MvSuggest(App):
         ("ctrl+k", "cursor_up", "Moves cursor up"),
     ]
 
+    # titles = helper.get_input_suggestions("../data/movie_similarity.csv")
+    titles = pd.read_csv("../data/titles.csv")["index"].values
+
     def compose(self) -> ComposeResult:
         """Create child widgets of the app."""
         yield Header()
         yield Footer()
-        yield ScrollableContainer(Input("text"), id="list")
+        yield ScrollableContainer(
+            Input("text", suggester=SuggestFromList(
+                self.titles, case_sensitive=False)),
+            id="list",
+        )
 
     async def on_input_submitted(self, event: Input.Submitted) -> None:
         """Handle submit action."""
