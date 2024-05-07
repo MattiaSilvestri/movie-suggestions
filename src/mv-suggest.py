@@ -21,6 +21,7 @@ class MvSuggest(App):
         ("r", "remove_list", "Remove list"),
         ("ctrl+j", "cursor_down", "Moves cursor down"),
         ("ctrl+k", "cursor_up", "Moves cursor up"),
+        ("ctrl+f", "focus_input", "Focus input"),
     ]
 
     # titles = helper.get_input_suggestions("../data/movie_similarity.csv")
@@ -36,10 +37,15 @@ class MvSuggest(App):
             id="list",
         )
 
+    # --- Functions to manage adding and removing widgets --- #
     async def on_input_submitted(self, event: Input.Submitted) -> None:
         """Handle submit action."""
 
         movie_query = event.input.value
+        # Remove previous list, if present
+        old_list = self.query("MovieList")
+        if old_list:
+            await old_list.remove()
         try:
             suggestions_df = helper.lookup_title(
                 "../data/movie_similarity.csv", movie_query, 10
@@ -56,12 +62,18 @@ class MvSuggest(App):
             mounted_list.highlighted_child.add_class("highlighted")
 
         except KeyError:
-            # error = Log.write_line(Log, line=f"Movie not found: {movie_query}")
-            # error.write_line(self, line=f"Movie not found: {movie_query}")
             await self.query_one("#list").mount(Log())
             error = self.query_one(Log)
             error.write_line(f"Movie not found: {movie_query}")
 
+    def on_input_changed(self, event: Input.Changed) -> None:
+        """Handle input change."""
+
+        if self.query(Log):
+            log_message = self.query_one(Log)
+            log_message.remove()
+
+    # --- Action functions --- #
     def action_remove_list(self) -> None:
         """Action to remove list."""
         list_item = self.query("MovieList")
@@ -75,6 +87,10 @@ class MvSuggest(App):
     def action_cursor_up(self) -> None:
         """Action to move cursor up."""
         self.query_one("MovieList").action_cursor_up()
+
+    def action_focus_input(self) -> None:
+        """Action to focus input."""
+        self.query_one(Input).focus()
 
 
 if __name__ == "__main__":
