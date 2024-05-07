@@ -4,7 +4,7 @@ import utils.helper as helper
 import pandas as pd
 
 from textual.app import App, ComposeResult
-from textual.widgets import Footer, Header, ListItem, Label, Input
+from textual.widgets import Footer, Header, ListItem, Label, Input, Log
 from textual.containers import ScrollableContainer
 from textual.suggester import SuggestFromList
 
@@ -40,19 +40,27 @@ class MvSuggest(App):
         """Handle submit action."""
 
         movie_query = event.input.value
-        suggestions_df = helper.lookup_title(
-            "../data/movie_similarity.csv", movie_query, 10
-        )
+        try:
+            suggestions_df = helper.lookup_title(
+                "../data/movie_similarity.csv", movie_query, 10
+            )
 
-        suggestions = [ListItem(Label(i))
-                       for i in suggestions_df["index"].values]
-        new_list = MovieList(*suggestions)
-        # Mount the list view widget
-        await self.query_one("#list").mount(new_list)
-        # Focus the first item
-        mounted_list = self.query_one("MovieList")
-        mounted_list.focus()
-        mounted_list.highlighted_child.add_class("highlighted")
+            suggestions = [ListItem(Label(i))
+                           for i in suggestions_df["index"].values]
+            new_list = MovieList(*suggestions)
+            # Mount the list view widget
+            await self.query_one("#list").mount(new_list)
+            # Focus the first item
+            mounted_list = self.query_one("MovieList")
+            mounted_list.focus()
+            mounted_list.highlighted_child.add_class("highlighted")
+
+        except KeyError:
+            # error = Log.write_line(Log, line=f"Movie not found: {movie_query}")
+            # error.write_line(self, line=f"Movie not found: {movie_query}")
+            await self.query_one("#list").mount(Log())
+            error = self.query_one(Log)
+            error.write_line(f"Movie not found: {movie_query}")
 
     def action_remove_list(self) -> None:
         """Action to remove list."""

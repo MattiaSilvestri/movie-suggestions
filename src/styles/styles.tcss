@@ -24,4 +24,18 @@ Label {
 
 Input {
     background: #181825;
+    border: round #cba6f7 20%;
 }
+
+Log {
+    box-sizing: content-box;
+    width: 100%;
+    height: 3;
+    background: #181825;
+    margin: 0;
+    padding-top: 1;
+    padding-left: 2;
+    color: #f9f9f9;
+    text-align: center;
+}
+
