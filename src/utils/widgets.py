@@ -1,6 +1,6 @@
 """Define widgets"""
 
-from textual.widgets import ListView, Input, Log
+from textual.widgets import ListView
 
 
 class MovieList(ListView):
