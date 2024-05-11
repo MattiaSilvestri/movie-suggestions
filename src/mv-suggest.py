@@ -3,7 +3,6 @@ import utils.helper as helper
 import utils.messages as messages
 
 import pandas as pd
-from asyncio import CancelledError
 
 from textual.app import App, ComposeResult
 from textual.widgets import (
@@ -13,13 +12,18 @@ from textual.widgets import (
     Label,
     Input,
     Log,
-    LoadingIndicator,
 )
 from textual.containers import ScrollableContainer
 from textual.suggester import SuggestFromList
-from textual import work, worker
+from textual import work
 
 # from textual.reactive import reactive
+
+# TODO: Scrollbar follows highlight
+# TODO: Better suggestions
+# TODO: Add movies year
+# TODO: Add links to movies website
+# TODO: Host dataset on Hugging Face
 
 
 class MvSuggest(App):
@@ -81,8 +85,6 @@ class MvSuggest(App):
             mounted_list = self.query_one("MovieList")
             mounted_list.focus()
             mounted_list.highlighted_child.add_class("highlighted")
-            print("found")
-            print(str(event.titles))
 
         else:
             self.query_one("#results").loading = False
@@ -90,8 +92,6 @@ class MvSuggest(App):
             error = self.query_one(Log)
             movie_query = self.query_one(Input).value
             error.write_line(f"Movie not found: {movie_query}")
-            print("not found")
-            print(str(event.titles))
 
     # --- Action functions --- #
     def action_remove_list(self) -> None:
