@@ -15,7 +15,7 @@ ListItem {
 }
 
 .highlighted {
-    background: #f9f9f9;
+    background: #313244;
 }
 
 Label {
