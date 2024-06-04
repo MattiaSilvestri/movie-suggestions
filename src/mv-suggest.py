@@ -19,7 +19,6 @@ from textual import work
 
 # from textual.reactive import reactive
 
-# TODO: Scrollbar follows highlight
 # TODO: Better suggestions
 # TODO: Add movies year
 # TODO: Add links to movies website
@@ -50,7 +49,7 @@ class MvSuggest(App):
         )
         yield ScrollableContainer(id="results")
 
-    # --- Functions to manage adding and removing widgets --- #
+    # --- Signal handling --- #
 
     async def on_input_submitted(self, event: Input.Submitted) -> None:
         """Handle submit action."""
@@ -93,6 +92,15 @@ class MvSuggest(App):
             movie_query = self.query_one(Input).value
             error.write_line(f"Movie not found: {movie_query}")
 
+    def on_cursor_changed(self, event: messages.CursorChanged):
+        """Keep highlighted item in view"""
+        scrollable = self.query_one("#results")
+        scroll_region = scrollable.region
+        highlight_region = event.item.region
+        if not scroll_region.contains_region(highlight_region):
+            # scrollable.scroll_to_region(highlight_region)
+            event.item.scroll_visible()
+
     # --- Action functions --- #
     def action_remove_list(self) -> None:
         """Action to remove list."""
@@ -119,8 +127,7 @@ class MvSuggest(App):
                 "../data/movie_similarity.csv", movie_query, 20
             )
 
-            suggestions = [ListItem(Label(i))
-                           for i in suggestions_df["index"].values]
+            suggestions = [ListItem(Label(i)) for i in suggestions_df["index"].values]
             new_list = MovieList(*suggestions)
 
             # Signal that the movies have been found and ordered
