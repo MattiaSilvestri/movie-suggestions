@@ -38,7 +38,7 @@ class MvSuggest(App):
         ("ctrl+f", "focus_input", "Focus input"),
     ]
 
-    titles = pd.read_csv("../data/titles.csv")["index"].values
+    titles = pd.read_csv("data/titles.csv")["index"].values
 
     def compose(self) -> ComposeResult:
         """Create child widgets of the app."""
@@ -124,7 +124,7 @@ class MvSuggest(App):
     async def create_list(self, movie_query: str) -> MovieList:
         try:
             suggestions_df = helper.lookup_title(
-                "../data/movie_similarity.csv", movie_query, 20
+                "data/movie_similarity.csv", movie_query, 20
             )
 
             suggestions = [ListItem(Label(i)) for i in suggestions_df["index"].values]
