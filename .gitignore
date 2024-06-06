@@ -2,6 +2,6 @@
 .idea
 *.log
 tmp/
-data/
+local_data/
 **/__pycache__
 .pylintrc
